@@ -15,13 +15,21 @@
     "commands": [
       {
         "command": "extension.runAIC",
-        "title": "Run AIC"
+        "title": "AIC"
+      },
+      {
+        "command": "extension.runAIP",
+        "title": "AIP"
       }
     ],
     "menus": {
       "editor/title": [
         {
           "command": "extension.runAIC",
+          "group": "navigation"
+        },
+        {
+          "command": "extension.runAIP",
           "group": "navigation"
         }
       ]
