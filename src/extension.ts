@@ -17,7 +17,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 export function deactivate() { }
 
-async function runCommandInTerminal(command: string) { const currentWorkspace = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+function runCommandInTerminal(command: string) {
+	const currentWorkspace = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
 	if (!currentWorkspace) {
 		vscode.window.showErrorMessage('No workspace folder open');
 		return;
@@ -26,10 +27,4 @@ async function runCommandInTerminal(command: string) { const currentWorkspace = 
 	const terminal = vscode.window.createTerminal(command);
 	terminal.show();
 	terminal.sendText(command);
-
-	// Wait for the command to execute then close the terminal
-	setTimeout(async () => {
-		terminal.dispose(); // Dispose the terminal instance
-		await vscode.commands.executeCommand('workbench.action.terminal.toggleTerminal'); // Toggle terminal view
-	}, 5000); // Adjust the timeout as needed
 }
