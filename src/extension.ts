@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "click-commit" is now active!');
@@ -13,6 +15,15 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(runAICCommand);
 	context.subscriptions.push(runAIPCommand);
+
+	const successFile = path.join(vscode.workspace.rootPath || '', '.vscode_success');
+	fs.watch(successFile, async (event, filename) => {
+		if (event === 'rename' && fs.existsSync(successFile)) { // file was created
+			fs.unlinkSync(successFile); // delete the file
+			// The command completed successfully. Close the terminal.
+			await vscode.commands.executeCommand('workbench.action.terminal.toggleTerminal');
+		}
+	});
 }
 
 export function deactivate() { }
@@ -26,5 +37,5 @@ function runCommandInTerminal(command: string) {
 
 	const terminal = vscode.window.createTerminal(command);
 	terminal.show();
-	terminal.sendText(command);
+	terminal.sendText(`${command} && touch .vscode_success`);
 }
